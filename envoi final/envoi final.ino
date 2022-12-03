@@ -200,6 +200,7 @@ void setup() {
   scale.set_scale(28395.61);
 }
 
+float delay_min = 20;
 
 void loop() {
   digitalWrite(12,HIGH);
@@ -274,7 +275,10 @@ void loop() {
       char cmd[128];
       sprintf(cmd, "AT+MSGHEX=%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X\r\n", short(poids * 100), short(tmp * 100), short(voltage * 100), (batterie), short(hum * 100), (short)(temp[0] * 100), (short)(temp[1] * 100),short(tmp2 * 100),short(hum2 * 100), (short)(100 * s_bin098_146Hz), (short)(100 * s_bin146_195Hz), (short)(100 * s_bin195_244Hz), (short)(100 * s_bin244_293Hz), (short)(100 * s_bin293_342Hz), (short)(100 * s_bin342_391Hz), (short)(100 * s_bin391_439Hz), (short)(100 * s_bin439_488Hz), (short)(100 * s_bin488_537Hz), (short)(100 * s_bin537_586Hz),(short)(temp[2] * 100));
       at_send_check_response("ACK Received", 5000, cmd);
-      delay(1200000);
+      char * downlink = strstr(recv_buf,"\"");
+      downlink = strtok(downlink,"\"");
+      if (downlink) delay_min = strtol(downlink,NULL,16);
+      delay(delay_min*60000);
     }
   } else {
     delay(1000);

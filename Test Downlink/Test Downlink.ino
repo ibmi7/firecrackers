@@ -76,7 +76,7 @@ void loop() {
       at_send_check_response("ACK Received", 5000, cmd);
       char * downlink = strstr(recv_buf,"\"");
       downlink = strtok(downlink,"\"");
-      if (downlink) delay_min = strtol(downlink,NULL,10);
+      if (downlink) delay_min = strtol(downlink,NULL,16);
       Serial.println(downlink);
       delay(10000);
     }
