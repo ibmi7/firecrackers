@@ -1,3 +1,28 @@
+//Override the default main function to remove USB CDC feature - @farome contribution
+int main(void){
+init();
+initVariant();
+
+//Disabling UART0 (saves around 300-500µA) - @Jul10199555 contribution
+NRF_UART0->TASKS_STOPTX = 1;
+NRF_UART0->TASKS_STOPRX = 1;
+NRF_UART0->ENABLE = 0;
+
+*(volatile uint32_t *)0x40002FFC = 0;
+*(volatile uint32_t *)0x40002FFC;
+*(volatile uint32_t *)0x40002FFC = 1; //Setting up UART registers again due to a library issue
+
+
+  setup();
+  for(;;){
+    loop();
+//If you won't be using serial communication comment next line
+    if(arduino::serialEventRun) arduino::serialEventRun();
+  }
+  return 0;
+}
+
+#include "ArduinoLowPower_Adjusted.h"
 
 static char recv_buf[512];
 static bool is_exist = false;
@@ -29,6 +54,8 @@ float delay_min = 1;
 
 void setup() {
   delay(10000);
+  digitalWrite(PIN_ENABLE_SENSORS_3V3, HIGH); //PIN_ENABLE_I2C_PULLUP - @pert contribution
+  digitalWrite(PIN_ENABLE_I2C_PULLUP, HIGH); //PIN_ENABLE_SENSORS_3V3 - @pert contribution
   Serial.begin(9600);
   // put your setup code here, to run once:
   //début du serial1 pour la communication LoRaWAN
@@ -79,7 +106,7 @@ void loop() {
       Serial.println(downlink);
       if (downlink) delay_min = strtol(downlink,NULL,16);
       Serial.println(downlink);
-      delay(10000);
+      LowPower.sleep(10000);
     }
   } else {
     delay(1000);
