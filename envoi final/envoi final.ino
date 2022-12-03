@@ -278,6 +278,7 @@ void loop() {
       char * downlink = strstr(recv_buf,"\"");
       downlink = strtok(downlink,"\"");
       if (downlink) delay_min = strtol(downlink,NULL,16);
+      if (delay_min<1) delay_min = 1;
       delay(delay_min*60000);
     }
   } else {
