@@ -35,12 +35,12 @@ void setup() {
   dht.begin();
   dht2.begin();
   Serial.println(F("DHT22 Unified Sensor Example"));
-  delayMS = sensor.min_delay / 1000;
+  //delayMS = sensor.min_delay / 1000;
 }
 
 void loop() {
   // Delay between measurements.
-  delay(delayMS);
+  delay(2000);
   // Get temperature event and print its value.
   sensors_event_t event;
   Serial.println("DHT sur la pin D11 : ");

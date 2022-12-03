@@ -53,6 +53,26 @@ byte sine_data[91] = {
 
 float amp[1024];
 float freq[1024];
+float s_bin098_146Hz = 0;
+float s_bin146_195Hz = 0;
+float s_bin195_244Hz = 0;
+float s_bin244_293Hz = 0;
+float s_bin293_342Hz = 0;
+float s_bin342_391Hz = 0;
+float s_bin391_439Hz = 0;
+float s_bin439_488Hz = 0;
+float s_bin488_537Hz = 0;
+float s_bin537_586Hz = 0;
+int j_bin098_146Hz = 0;
+int j_bin146_195Hz = 0;
+int j_bin195_244Hz = 0;
+int j_bin244_293Hz = 0;
+int j_bin293_342Hz = 0;
+int j_bin342_391Hz = 0;
+int j_bin391_439Hz = 0;
+int j_bin439_488Hz = 0;
+int j_bin488_537Hz = 0;
+int j_bin537_586Hz = 0;
 int size = 0;
 // DHT Temperature & Humidity Sensor
 // Unified Sensor Library Example
@@ -193,80 +213,9 @@ void loop() {
     tab[i] = analogRead(A0);
     delayMicroseconds(500);
   }
-  float f = Q_FFT(tab, T, 2000);
-  float s_bin098_146Hz = 0;
-  float s_bin146_195Hz = 0;
-  float s_bin195_244Hz = 0;
-  float s_bin244_293Hz = 0;
-  float s_bin293_342Hz = 0;
-  float s_bin342_391Hz = 0;
-  float s_bin391_439Hz = 0;
-  float s_bin439_488Hz = 0;
-  float s_bin488_537Hz = 0;
-  float s_bin537_586Hz = 0;
-  int j_bin098_146Hz = 0;
-  int j_bin146_195Hz = 0;
-  int j_bin195_244Hz = 0;
-  int j_bin244_293Hz = 0;
-  int j_bin293_342Hz = 0;
-  int j_bin342_391Hz = 0;
-  int j_bin391_439Hz = 0;
-  int j_bin439_488Hz = 0;
-  int j_bin488_537Hz = 0;
-  int j_bin537_586Hz = 0;
-  for (int i = 0; i < size; i++) {
-    if (freq[i] >= 98 && freq[i] < 146){
-      s_bin098_146Hz += amp[i];
-      j_bin098_146Hz ++;
-    } 
-    else if (freq[i] >= 146 && freq[i] < 195){
-      s_bin146_195Hz += amp[i];
-      j_bin146_195Hz++;
-    } 
-    else if (freq[i] >= 195 && freq[i] < 244){
-      s_bin195_244Hz += amp[i];
-      j_bin195_244Hz++;
-    } 
-    else if (freq[i] >= 244 && freq[i] < 293){
-      s_bin244_293Hz += amp[i];
-      j_bin244_293Hz++;
-    } 
-    else if (freq[i] >= 293 && freq[i] < 342){
-      s_bin293_342Hz += amp[i];
-      j_bin293_342Hz++;
-    } 
-    else if (freq[i] >= 342 && freq[i] < 391){
-      s_bin342_391Hz += amp[i];
-      j_bin342_391Hz++;
-    } 
-    else if (freq[i] >= 391 && freq[i] < 439){
-      s_bin391_439Hz += amp[i];
-      j_bin391_439Hz++;
-    } 
-    else if (freq[i] >= 439 && freq[i] < 488){
-      s_bin439_488Hz += amp[i];
-      j_bin439_488Hz++;
-    } 
-    else if (freq[i] >= 488 && freq[i] < 537){
-      s_bin488_537Hz += amp[i];
-      j_bin488_537Hz++;
-    } 
-    else if (freq[i] >= 537 && freq[i] < 586){
-      s_bin537_586Hz += amp[i];
-      j_bin537_586Hz++;
-    } 
-  }
-  if (j_bin098_146Hz) s_bin098_146Hz /= j_bin098_146Hz;
-  if (j_bin146_195Hz)   s_bin146_195Hz /= j_bin146_195Hz;
-  if (j_bin195_244Hz)  s_bin195_244Hz /= j_bin195_244Hz;
-  if (j_bin244_293Hz) s_bin244_293Hz /= j_bin244_293Hz;
-  if (j_bin293_342Hz) s_bin293_342Hz /= j_bin293_342Hz;
-  if (j_bin342_391Hz) s_bin342_391Hz /= j_bin342_391Hz;
-  if (j_bin391_439Hz) s_bin391_439Hz /= j_bin391_439Hz;
-  if (j_bin439_488Hz) s_bin439_488Hz /= j_bin439_488Hz;
-  if (j_bin488_537Hz) s_bin488_537Hz /= j_bin488_537Hz;
-  if (j_bin537_586Hz) s_bin537_586Hz /= j_bin537_586Hz;
-
+  Q_FFT(tab, T, 2000);
+  
+  
   //capteur de Temp/Hum
   sensors_event_t event;
   sensors_event_t event2;
@@ -305,7 +254,7 @@ void loop() {
         device.Update(bus);
       }
     }
-    if (cpt == 1) cpt = 0;
+    if (cpt == 2) cpt = 0;
     else cpt++;
   } while (discovery.HaveMore());
 
@@ -325,13 +274,20 @@ void loop() {
       char cmd[128];
       sprintf(cmd, "AT+MSGHEX=%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X%04X\r\n", short(poids * 100), short(tmp * 100), short(voltage * 100), (batterie), short(hum * 100), (short)(temp[0] * 100), (short)(temp[1] * 100),short(tmp2 * 100),short(hum2 * 100), (short)(100 * s_bin098_146Hz), (short)(100 * s_bin146_195Hz), (short)(100 * s_bin195_244Hz), (short)(100 * s_bin244_293Hz), (short)(100 * s_bin293_342Hz), (short)(100 * s_bin342_391Hz), (short)(100 * s_bin391_439Hz), (short)(100 * s_bin439_488Hz), (short)(100 * s_bin488_537Hz), (short)(100 * s_bin537_586Hz),(short)(temp[2] * 100));
       at_send_check_response("ACK Received", 5000, cmd);
-      delay(600000);
+      delay(1200000);
     }
   } else {
     delay(1000);
   }
   digitalWrite(12,LOW);
 }
+
+
+
+
+
+
+
 
 
 
@@ -508,6 +464,58 @@ Serial.print(out_im[i]); Serial.println("i");
          Serial.println(out_r[i]); 
           */
   }
+  for (int i = 0; i < size; i++) {
+    if (freq[i] >= 98 && freq[i] < 146){
+      s_bin098_146Hz += amp[i];
+      j_bin098_146Hz ++;
+    } 
+    else if (freq[i] >= 146 && freq[i] < 195){
+      s_bin146_195Hz += amp[i];
+      j_bin146_195Hz++;
+    } 
+    else if (freq[i] >= 195 && freq[i] < 244){
+      s_bin195_244Hz += amp[i];
+      j_bin195_244Hz++;
+    } 
+    else if (freq[i] >= 244 && freq[i] < 293){
+      s_bin244_293Hz += amp[i];
+      j_bin244_293Hz++;
+    } 
+    else if (freq[i] >= 293 && freq[i] < 342){
+      s_bin293_342Hz += amp[i];
+      j_bin293_342Hz++;
+    } 
+    else if (freq[i] >= 342 && freq[i] < 391){
+      s_bin342_391Hz += amp[i];
+      j_bin342_391Hz++;
+    } 
+    else if (freq[i] >= 391 && freq[i] < 439){
+      s_bin391_439Hz += amp[i];
+      j_bin391_439Hz++;
+    } 
+    else if (freq[i] >= 439 && freq[i] < 488){
+      s_bin439_488Hz += amp[i];
+      j_bin439_488Hz++;
+    } 
+    else if (freq[i] >= 488 && freq[i] < 537){
+      s_bin488_537Hz += amp[i];
+      j_bin488_537Hz++;
+    } 
+    else if (freq[i] >= 537 && freq[i] < 586){
+      s_bin537_586Hz += amp[i];
+      j_bin537_586Hz++;
+    } 
+  }
+  if (j_bin098_146Hz) s_bin098_146Hz /= j_bin098_146Hz;
+  if (j_bin146_195Hz)   s_bin146_195Hz /= j_bin146_195Hz;
+  if (j_bin195_244Hz)  s_bin195_244Hz /= j_bin195_244Hz;
+  if (j_bin244_293Hz) s_bin244_293Hz /= j_bin244_293Hz;
+  if (j_bin293_342Hz) s_bin293_342Hz /= j_bin293_342Hz;
+  if (j_bin342_391Hz) s_bin342_391Hz /= j_bin342_391Hz;
+  if (j_bin391_439Hz) s_bin391_439Hz /= j_bin391_439Hz;
+  if (j_bin439_488Hz) s_bin439_488Hz /= j_bin439_488Hz;
+  if (j_bin488_537Hz) s_bin488_537Hz /= j_bin488_537Hz;
+  if (j_bin537_586Hz) s_bin537_586Hz /= j_bin537_586Hz;
 
 
   float fa, fb, fc;
